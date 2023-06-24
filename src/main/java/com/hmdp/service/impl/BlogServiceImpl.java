@@ -184,24 +184,23 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
                 os = 1;
             }
         }
-
         // 5.根据id查询blog
         String idStr = StrUtil.join(",", ids);
-        List<Blog> blogs = query().in("id", ids).last("ORDER BY FIELD(id," + idStr + ")").list();
-
+        List<Blog> blogs = query()
+                .in("id", ids)
+                .last("ORDER BY FIELD(id," + idStr + ")")
+                .list();
         for (Blog blog : blogs) {
             // 5.1.查询blog有关的用户
             queryBlogUser(blog);
             // 5.2.查询blog是否被点赞
             isBlogLiked(blog);
         }
-
         // 6.封装并返回
         ScrollResult r = new ScrollResult();
         r.setList(blogs);
         r.setOffset(os);
         r.setMinTime(minTime);
-
         return Result.ok(r);
     }
 
